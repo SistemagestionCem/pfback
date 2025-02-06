@@ -12,9 +12,19 @@ import { Payment } from '../payments/Payment.entity';
 import { Notification } from '../notifications/Notification.entity';
 import { Evidence } from '../evidences/Evidence.entity';
 
+<<<<<<< HEAD
 @Entity({
   name: 'orders',
 })
+=======
+
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../users/User.entity";
+import { OrderHistory } from "../orderHistories/orderHistory.entity";
+
+@Entity ('orders')
+
+>>>>>>> 2f8314dfd0ec168c45535fc6a1277334a8731b10
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -43,8 +53,16 @@ export class Order {
   @OneToMany(() => Notification, (notification) => notification.order)
   notifications: Notification[];
 
+<<<<<<< HEAD
   @OneToMany(() => Evidence, (evidence) => evidence.order)
   evidences: Evidence[];
+=======
+  @OneToMany (() => Evidence, evidence => evidence.order)
+  evidences: Evidence [];
+
+  @OneToOne (() => Payment, payment => payment.order)
+  payments: Payment [];
+>>>>>>> 2f8314dfd0ec168c45535fc6a1277334a8731b10
 
   @OneToOne(() => Payment, (payment) => payment.order)
   payment: Payment;
