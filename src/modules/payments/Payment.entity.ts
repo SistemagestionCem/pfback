@@ -30,6 +30,7 @@ export class Payment {
     nullable: false,
 
   })
+
   price: number;
 
   @Column ({
@@ -39,10 +40,23 @@ export class Payment {
     precision: 0,
 
   })
+
   invoicePaidAt: Date;
+
+  @Column ({
+
+    type: 'varchar',
+    length: 20,
+    nullable: false,
+    default: 'pending',
+    
+  })
+
+  status: string;
 
   @OneToOne ( () => Order, (order) => order.payment)
   @JoinColumn ({ name: 'order_id' })
   order: Order;
 
 }
+
