@@ -18,6 +18,7 @@ export class PaymentsService {
   async createPayment(orderId: string, price: number) {
     try {
       const accessToken = this.configService.get<string>('MERCADOPAGO_ACCESS_TOKEN');
+      console.log('🔍 Access Token:', accessToken);
       
       const response = await axios.post(
         this.mercadoPagoUrl,
@@ -26,17 +27,23 @@ export class PaymentsService {
             {
               title: `Pago por orden ${orderId}`,
               quantity: 1,
-              currency_id: 'ARS',
+              currency_id: 'COP',
               unit_price: price,
             },
           ],
           back_urls: {
-            success: 'https://tu-sitio.com/success',
-            failure: 'https://tu-sitio.com/failure',
-            pending: 'https://tu-sitio.com/pending',
+            success: 'http://localhost:3000/payments/success',
+            failure: 'http://localhost:3000/payments/failure',
+            pending: 'http://localhost:3000/payments/pending',
           },
           auto_return: 'approved',
           external_reference: orderId,
+          sandbox_init_point: true,  
+          payer: {
+            email: 'test_user_12345678@test.com',
+            /*email: 'janellispatricia@gmail.com',*/
+
+          },
         },
         {
           headers: {
@@ -49,6 +56,7 @@ export class PaymentsService {
       await this.paymentsRepository.createPayment(orderId, price);
       return { paymentUrl: response.data.init_point };
     } catch (error) {
+      console.log('Error Mercado Pago:', error.response?.data || error.message);
       throw new Error(`Error al crear pago: ${error.message}`);
     }
   }
@@ -73,6 +81,24 @@ export class PaymentsService {
       throw new Error(`Error al obtener el estado del pago: ${error.message}`);
     }
   }
+
+  async processPaymentUpdated(paymentId: string) {
+    console.log(`🔍 Evento de pago actualizado recibido. ID: ${paymentId}`);
+  
+
+    const updated = await this.paymentsRepository.updatePaymentStatus(paymentId, 'approved');
+  
+    if (updated) {
+      console.log(`Pago con ID ${paymentId} actualizado a estado: approved`);
+    } else {
+      console.log(`No se encontró pago con ID: ${paymentId} en la base de datos`);
+    }
+  }
+  
+  
 }
+
+
+
 
 
