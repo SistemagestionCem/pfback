@@ -36,7 +36,7 @@ export class Payment {
   @Column ({
 
     type: 'timestamp',
-    nullable: false,
+    nullable: true,
     precision: 0,
 
   })
@@ -53,6 +53,9 @@ export class Payment {
   })
 
   status: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  externalOrderId: string;
 
   @OneToOne ( () => Order, (order) => order.payment)
   @JoinColumn ({ name: 'order_id' })

@@ -41,6 +41,7 @@ import { PaymentsModule} from './modules/payments/payments.module';
     NotificationsModule,
     MailModule,
     PaymentsModule,
+
   ],
   controllers: [],
   providers: [],
