@@ -40,7 +40,7 @@ import { DatabaseModule } from './modules/database/seeder.module';
     AuthModule,
     NotificationsModule,
     MailModule,
-    DatabaseModule
+    DatabaseModule,
   ],
   controllers: [],
   providers: [],

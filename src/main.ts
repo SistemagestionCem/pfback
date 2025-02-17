@@ -5,6 +5,9 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors( {origin: 'https://www.mercadopago.com', // O la URL de MercadoPago
+    methods: 'GET, POST',
+    allowedHeaders: 'Content-Type, Authorization',});
 
   const config = new DocumentBuilder()
     .setTitle('SistemagestionCem')

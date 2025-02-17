@@ -1,19 +1,16 @@
-
-
-import { IsUUID, IsString, IsNotEmpty, IsDate } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsUUID, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateOrderHistoriesDto {
-
-  @IsUUID ()
-  @IsNotEmpty ()
+  @IsUUID()
+  @IsNotEmpty()
   readonly orderId: string;
 
-  @IsString ()
+  @IsString()
   @IsNotEmpty()
   readonly event: string;
 
-  @IsDate ()
-  @IsNotEmpty ()
-  readonly createdAt: Date;
-
+  @IsOptional()
+  @Type(() => Date)
+  readonly createdAt?: Date;
 }
