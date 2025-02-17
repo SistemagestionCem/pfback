@@ -37,6 +37,7 @@ export class User {
     nullable: true,
     type: 'int',
     default: 99999999,
+    unique: true,
   })
   dni: number;
 
