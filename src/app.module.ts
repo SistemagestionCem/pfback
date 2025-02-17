@@ -17,7 +17,7 @@ envConfig({
 
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { MailModule } from './modules/mail/mail.module';
-import { PaymentsModule} from './modules/payments/payments.module';
+import { DatabaseModule } from './modules/database/seeder.module';
 
 @Module({
   imports: [
@@ -40,8 +40,7 @@ import { PaymentsModule} from './modules/payments/payments.module';
     AuthModule,
     NotificationsModule,
     MailModule,
-    PaymentsModule,
-
+    DatabaseModule,
   ],
   controllers: [],
   providers: [],
