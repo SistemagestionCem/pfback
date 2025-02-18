@@ -12,6 +12,7 @@ import {
 
 import { v7 as uuid } from 'uuid';
 import { Order } from '../orders/Order.entity';
+import { PaymentStatus } from 'src/enum/payment.status.enum';
 
 @Entity ({
 
@@ -45,14 +46,13 @@ export class Payment {
 
   @Column ({
 
-    type: 'varchar',
-    length: 20,
+    type: 'enum',
+    enum: PaymentStatus, default: PaymentStatus.PENDING,
     nullable: false,
-    default: 'pending',
-    
+       
   })
 
-  status: string;
+  status: PaymentStatus;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   externalOrderId: string;
