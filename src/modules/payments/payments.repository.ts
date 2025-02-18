@@ -1,9 +1,13 @@
 
 
-/*import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Payment } from './Payment.entity';
+import { Payment } from './payment.entity';
+import { Order } from '../orders/order.entity';
+import { PaymentStatus} from '../../enum/payment.status.enum';
+import { CreatePaymentDto } from '../../dto/payments/createPayment.dto';
+import { UpdatePaymentDto } from '../../dto/payments/updatePayment.dto';
 
 @Injectable()
 export class PaymentsRepository {
@@ -12,158 +16,48 @@ export class PaymentsRepository {
     private readonly paymentRepository: Repository<Payment>,
   ) {}
 
-  async createPayment(orderId: string, price: number): Promise<Payment> {
+
+  async createPayment(order: Order, createPaymentDto: CreatePaymentDto): Promise<Payment> {
     const payment = this.paymentRepository.create({
-      price,
-      invoicePaidAt: new Date(),
-      status: 'pending',
-      order: { id: orderId },
+      order,
+      price: createPaymentDto.price,
+      status: PaymentStatus.PENDING,
     });
-    return this.paymentRepository.save(payment);
+
+    return await this.paymentRepository.save(payment);
   }
 
-  async updatePaymentStatus(paymentId: string, status: string): Promise<boolean> {
-    const result = await this.paymentRepository.update({ id: paymentId }, { status });
-  
-    console.log(`🔍 Resultado de update:`, result);
-    
-    return result.affected !== undefined && result.affected > 0;
-  }
-  
-
-  async findByOrderId(orderId: string): Promise<Payment | null> {
-    return this.paymentRepository.findOne({ where: { order: { id: orderId } } });
-  }
-  
-}*/
-
-
-/*import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Payment } from './Payment.entity';
-import { Order } from '../orders/Order.entity';
-
-
-@Injectable()
-export class PaymentsRepository {
-  constructor(
-    @InjectRepository(Payment)
-    private readonly paymentRepository: Repository<Payment>,
-    
-  ) {}
-
-  /*async createPayment(orderId: string, price: number): Promise<Payment> {
-    const payment = this.paymentRepository.create({
-      price,
-      invoicePaidAt: new Date(),
-      status: 'pending',
-      order: { id: orderId },
+  async findPaymentById(paymentId: string): Promise<Payment | null> {
+    return await this.paymentRepository.findOne({
+      where: { id: paymentId },
+      relations: ['order'],
     });
-    return this.paymentRepository.save(payment);
-  }*/
+  }
 
-    /*async createPayment(paymentData: Partial<Payment>): Promise<Payment> {
-      const payment = this.paymentRepository.create(paymentData);
-      return this.paymentRepository.save(payment);
+    async updatePaymentStatus(payment: Payment, updatePaymentDto: UpdatePaymentDto): Promise<Payment> {
+      const newStatus = updatePaymentDto.status as PaymentStatus;    
+
+      if (!Object.values(PaymentStatus).includes(newStatus)) {
+        throw new Error(`Estado de pago inválido: ${updatePaymentDto.status}`);
+      }    
+
+      if (newStatus === PaymentStatus.APPROVED && !payment.invoicePaidAt) {
+        payment.invoicePaidAt = new Date();
+      }
+    
+      payment.status = newStatus;
+      
+      return await this.paymentRepository.save(payment);
     }
-     
-
-  async updatePaymentStatus(paymentId: string, status: string): Promise<boolean> {
-    const result = await this.paymentRepository.update({ id: paymentId }, { status });
-  
-    console.log(`🔍 Resultado de update:`, result);
     
-    return result.affected !== undefined && result.affected > 0;
+
+  async savePayment(payment: Payment): Promise<Payment> {
+    return await this.paymentRepository.save(payment);
   }
 
-  async findByOrderId(orderId: string): Promise<Payment | null> {
-    return this.paymentRepository.findOne({ where: { order: { id: orderId } } });
-  }
-
-  async findOne(id: string): Promise<Order | null> {
-    return this.repository.findOne({ where: { id } }); // 🛠 Agrega esta función
-  }
-}*/
+}
 
 
-/*import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Payment } from './Payment.entity';
-import { Order } from '../orders/Order.entity';
-import { OrdersRepository } from '../orders/orders.repository'; /
-
-@Injectable()
-export class PaymentsRepository {
-  constructor(
-    @InjectRepository(Payment)
-    private readonly paymentRepository: Repository<Payment>,
-
-    private readonly ordersRepository: OrdersRepository, 
-  ) {}
-
-  async createPayment(paymentData: Partial<Payment>): Promise<Payment> {
-    const payment = this.paymentRepository.create(paymentData);
-    return this.paymentRepository.save(payment);
-  }
-
-  async updatePaymentStatus(paymentId: string, status: string): Promise<boolean> {
-    const result = await this.paymentRepository.update({ id: paymentId }, { status });
-
-    console.log(`Resultado de update:`, result);
-
-    return result.affected !== undefined && result.affected > 0;
-  }
-
-  async findByOrderId(orderId: string): Promise<Payment | null> {
-    return this.paymentRepository.findOne({ where: { order: { id: orderId } } });
-  }
-
-  // ✅ Corregí esta función para buscar en `OrdersRepository`
-  async findOne(id: string): Promise<Order | null> {
-    return this.ordersRepository.findOne({ where: { id } }); 
-  }
-}*/
-
-
-/*import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Payment } from './Payment.entity';
-import { Order } from '../orders/Order.entity';
-import { OrdersRepository } from '../orders/orders.repository'; 
-
-@Injectable()
-export class PaymentsRepository {
-  constructor(
-    @InjectRepository(Payment)
-    private readonly paymentRepository: Repository<Payment>,
-
-    private readonly ordersRepository: OrdersRepository, 
-  ) {}
-
-  async createPayment(paymentData: Partial<Payment>): Promise<Payment> {
-    const payment = this.paymentRepository.create(paymentData);
-    return this.paymentRepository.save(payment);
-  }
-
-  async updatePaymentStatus(paymentId: string, status: string): Promise<boolean> {
-    const result = await this.paymentRepository.update({ id: paymentId }, { status });
-  
-    console.log(` Resultado de update:`, result);
-    
-    return result.affected !== undefined && result.affected > 0;
-  }
-
-  async findByOrderId(orderId: string): Promise<Payment | null> {
-    return this.paymentRepository.findOne({ where: { order: { id: orderId } } });
-  }
-
-  async findOne(id: string): Promise<Order | null> {
-    return this.ordersRepository.getOrderById(id); //  Corrige el llamado a findOne
-  }
-}*/
 
 
 

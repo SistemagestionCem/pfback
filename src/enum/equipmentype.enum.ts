@@ -2,9 +2,9 @@
 
 export enum EquipmentType {
 
-  EQUIPO =  'Equipo',
-  CELULAR = 'Celular',
-  TABLET = 'Tablet',
-  LAPTOP = 'Laptop',
+  EQUIPO =  'EQUIPO',
+  CELULAR = 'CELULAR',
+  TABLET = 'TABLET',
+  LAPTOP = 'LAPTOP',
   
 }

@@ -2,9 +2,22 @@
 
 export enum OrderStatus {
 
-  ACTUALIZAR = 'Actualizar',
-  PENDING = 'Pendiente ...',
-  STARTED = 'Servicio iniciado',  
-  COMPLETED = 'Servicio finalizado',
+  ACTUALIZAR = 'ACTUALIZAR',
+  PENDING = 'PEMDIENTE',
+  STARTED = 'SERVICIO INICIADO',  
+  COMPLETED = 'SERVICIO FINALIZADO',
+
+
+  /*Otros enums para el Front*/
+
+  PENDIENTE = 'PENDIENTE',
+  REVISION = 'REVISION',
+  CONFIRMACION = 'CONFIRMACION',
+  CONFIRMADO = 'CONFIRMADO',
+  CANCELADO = 'CANCELADO',
+  REPARACION = 'REPARACIÓN',
+  FINALIZADO = 'FINALIZADO',
+  PAGO = "PAGO",
+  RETIRADO = "RETIRADO",
   
 }
