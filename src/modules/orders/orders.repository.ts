@@ -1,14 +1,13 @@
 
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Order } from './Order.entity';
-import { CreateOrderDto } from 'src/dto/orders/createOrder.dto';
-import { UpdateOrderDto } from 'src/dto/orders/updateOrder.dto';
-import { UpdateStatusDto } from 'src/dto/orders/updateTechStatus.dto';
 import { OrderStatus } from 'src/enum/orderstatus.enum';
 import { UpdateTechicalDataDto } from '../../dto/orders/updateTechData.dto';
+import { UpdateOrderDto } from 'src/dto/orders/updateOrder.dto';
+import { CreateOrderDto } from 'src/dto/orders/createOrder.dto';
 
 @Injectable ()
 
@@ -61,14 +60,7 @@ export class OrdersRepository  {
 
     });
    
-  }    
-
-  /*async createOrder (orderData: CreateOrderDto): Promise<Order> {
-
-    const order = this.create (orderData);
-    return this.ordersRepository.save (order);
-
-  }*/
+  }   
 
   async createOrder (orderData: Partial<Order>): Promise<Order> {
 
@@ -76,12 +68,6 @@ export class OrdersRepository  {
     return order;
 
   }
-  
-  async saveOrder1 (order: Order): Promise<Order> {
-
-    return await this.entityManager.save (order);
-
-  }  
     
   async updateOrderStatus (
 
@@ -111,6 +97,13 @@ export class OrdersRepository  {
     return this.ordersRepository.findOne ({ where: { id } });  
   
   }   
+
+
+  async saveOrder1 (order: Order): Promise<Order> {
+
+    return await this.entityManager.save (order);
+
+  }  
   
   async updateOrder (id: string, updateData: Partial<Order>): Promise<Order> {
 
@@ -119,14 +112,35 @@ export class OrdersRepository  {
 
   }
 
-  async findOne(id: string): Promise<Order | null> {
+  async findOne (id: string): Promise<Order | null> {
+
     return this.ordersRepository.findOne({ where: { id } });
+
   }
   
+  async findOne1 (id: string): Promise<Order> {
+
+    const order = await this.ordersRepository.findOne ({ where: { id } });
+
+    if (!order) {
+
+      throw new NotFoundException('Orden no encontrada');
+
+    }
+
+    return order;
+
+  }
+
+  async saveOrder2 (id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+
+    const order = await this.findOne1 (id);
+    Object.assign (order, updateOrderDto);
+    return await this.ordersRepository.save (order);
   
 }
 
-
+}
 
 
 

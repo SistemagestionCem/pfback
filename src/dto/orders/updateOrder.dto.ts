@@ -1,23 +1,55 @@
 
 
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateOrderDto } from './createOrder.dto';
-import { IsBoolean, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
-import { OrderStatus } from 'src/enum/orderstatus.enum';
+import {
 
-export class UpdateOrderDto extends PartialType (CreateOrderDto) {
+  IsUUID,
+  IsOptional,
+  IsString,
+  IsEnum,
+  IsBoolean,
+  IsNumber,
+
+} from 'class-validator';
+
+import { EquipmentType } from '../../enum/equipmentype.enum';
+import { OrderStatus } from '../../enum/orderstatus.enum';
+
+export class UpdateOrderDto {
+
+  @IsOptional ()
+  @IsUUID ()
+  clientId?: string;
+
+  @IsOptional ()
+  @IsUUID ()
+  assignedTechnicianId?: string;
+
+  @IsOptional ()
+  @IsString ()
+  clientEmail?: string;
+
+  @IsOptional ()
+  @IsNumber ()
+  clientDni?: number;
+
+  @IsOptional ()
+  @IsString ()
+  imei?: string;
+
+  @IsOptional ()
+  @IsEnum (EquipmentType)
+  equipmentType?: EquipmentType;
+
+  @IsOptional ()
+  @IsString ()
+  description?: string;
 
   @IsOptional ()
   @IsEnum (OrderStatus)
-  status?: OrderStatus;  
-  
-  @IsOptional ()
-  @IsString ()
-  @IsUUID ()  
-  assignedTechnicianId?: string;
+  status?: OrderStatus;
 
   @IsOptional ()
   @IsBoolean ()
   isActive?: boolean;
-
+  
 }

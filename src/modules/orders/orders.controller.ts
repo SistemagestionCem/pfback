@@ -1,9 +1,8 @@
 
 
-import { Controller, Patch, Param, Body, Get, Post, Put } from '@nestjs/common';
+import { Controller, Patch, Param, Body, Get, Post, Put, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { OrdersService } from '../orders/orders.service';
 import { CreateOrderDto } from '../../dto/orders/createOrder.dto';
-import { OrderHistoriesService } from '../orderHistories/orderHistories.service';
 import { Order } from './Order.entity';
 import { UpdateOrderDto } from '../../dto/orders/updateOrder.dto';
 import { UpdateTechicalDataDto } from 'src/dto/orders/updateTechData.dto';
@@ -15,8 +14,7 @@ export class OrdersController {
 
   constructor (
 
-    private readonly ordersService: OrdersService,
-    private readonly orderHistoriesService: OrderHistoriesService,
+    private readonly ordersService: OrdersService,   
 
   ) {}
 
@@ -28,7 +26,8 @@ export class OrdersController {
     return this.ordersService.getAllOrders ();
 
   }
-  
+
+  /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/
   @Get ('email/:clientEmail') // Endpoint verificado!
 
   async getOrdersByClientEmail (@Param ('clientEmail') clientEmail: string): Promise<Order []> {
@@ -38,7 +37,8 @@ export class OrdersController {
 
   }
 
-  @Get ('technician/:technId') // Endpoint verificado!
+  /* Este Endpoint es de uso exclusivo del/los Tecnico(s).*/ 
+  @Get ('technician/:technId') 
 
   async getOrdersByTechnId (@Param ('technId') technId: string): Promise<Order []> {
 
@@ -54,14 +54,16 @@ export class OrdersController {
 
   }*/
 
-  @Get (':id') // Endpoint verificado!
-
+  /* Este Endpoint es de uso exclusivo del/los Administrador(es) y/o Cliente(s).*/ 
+  @Get (':id') 
+              
   async getOrderById (@Param ('id') orderId: string): Promise<Order> {
 
     return this.ordersService.getOrderById (orderId);
 
   }
 
+  /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/ 
   @Post ('create')
 
   async createOrder (@Body () createOrderDto: CreateOrderDto): Promise<Order> {
@@ -70,6 +72,21 @@ export class OrdersController {
 
   }
 
+  /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/ 
+  @Patch(':id')
+
+  async updateOrder (
+
+    @Param ('id') id: string,
+    @Body () updateOrderDto: UpdateOrderDto,
+
+  ) {
+
+    return this.ordersService.updateOrder (id, updateOrderDto);
+    
+  }
+
+  /* Este Endpoint es de uso exclusivo del/los Tecnico(s).*/
   @Patch ('technicaldata/:id') // Endpoint verificado!
 
   async updateTechnicalData (
@@ -83,6 +100,7 @@ export class OrdersController {
 
   }
 
+  /* Este Endpoint es de uso exclusivo del/los Tecnico(s).*/
   @Patch (':id/status') // Endpoint verificado!
 
   async updateOrderStatus (
@@ -96,8 +114,7 @@ export class OrdersController {
 
   }
 
-  /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/
-  /* Falso Delete*/
+  /* Falso Delete: Este Endpoint es de uso exclusivo del/los Administrador(es).*/ 
   @Put ('inactivate/:id')
 
   async inactivedelete ( 
