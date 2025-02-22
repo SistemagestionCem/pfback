@@ -4,11 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Notification } from './Notification.entity';
+import { Notification, NotificationType } from './Notification.entity';
 import { Repository } from 'typeorm';
 import { Order } from '../orders/Order.entity';
 import { CreateNotificationDto } from 'src/dto/notification/notification.dto';
 import { MailService } from '../mail/mail.service';
+import { OrderStatus } from 'src/enum/orderstatus.enum';
 
 @Injectable()
 export class NotificationsRepository {
@@ -18,7 +19,56 @@ export class NotificationsRepository {
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     private readonly mailService: MailService,
   ) {}
+  //* funciones adicionales para remindBudgetAcceptance
+  async getPendingOrders() {
+    return this.orderRepository.find({ where: { status: OrderStatus.PENDING } });
+  }
 
+  async countNotifications(orderId: string) {
+    return this.notificationRepository.count({
+      where: { order: { id: orderId }, type: NotificationType.BUDGET_REMINDER },
+    });
+  }
+
+  async createBudgetReminder(order: Order) {
+    const notification = this.notificationRepository.create({
+      order,
+      type: NotificationType.BUDGET_REMINDER,
+      message: 'Recordatorio de aceptación de presupuesto',
+    });
+    return this.notificationRepository.save(notification);
+  }
+
+  //* Notificación de cambio de estado (cuando la orden cambia)
+  async notifyStatusChange(order: Order) {
+    const statusMessageMap = {
+      [OrderStatus.ACTUALIZAR]:
+        'Se ha realizado una actualización en su orden.',
+      [OrderStatus.PENDING]:
+        'Su orden ha sido registrada y está pendiente de revisión.',
+      [OrderStatus.STARTED]: 'El servicio de reparación ha comenzado.',
+      [OrderStatus.COMPLETED]:
+        'Su equipo ha sido reparado y está listo para recoger.',
+    };
+
+    const latestStatus = order.status;
+    if (statusMessageMap[latestStatus]) {
+      await this.mailService.sendNotificationEmail(
+        order.clientEmail,
+        `📢 Estado actualizado: ${statusMessageMap[latestStatus]}`,
+      );
+
+      // Registrar la notificación en la base de datos
+      const notification = this.notificationRepository.create({
+        order,
+        type: NotificationType.STATUS_UPDATE,
+        message: statusMessageMap[latestStatus],
+      });
+      await this.notificationRepository.save(notification);
+    }
+  }
+
+  //* logica CRUD de notificaciones
   async create(
     createNotificationDto: CreateNotificationDto,
   ): Promise<Notification> {

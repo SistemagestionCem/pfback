@@ -4,11 +4,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Order } from './Order.entity';
-import { CreateOrderDto } from 'src/dto/orders/createOrder.dto';
-import { UpdateOrderDto } from 'src/dto/orders/updateOrder.dto';
-import { UpdateStatusDto } from 'src/dto/orders/updateTechStatus.dto';
+// import { CreateOrderDto } from 'src/dto/orders/createOrder.dto';
+// import { UpdateOrderDto } from 'src/dto/orders/updateOrder.dto';
+// import { UpdateStatusDto } from 'src/dto/orders/updateTechStatus.dto';
 import { OrderStatus } from 'src/enum/orderstatus.enum';
 import { UpdateTechicalDataDto } from '../../dto/orders/updateTechData.dto';
+import { NotificationsRepository } from '../notifications/notifications.repository';
 
 @Injectable ()
 
@@ -18,8 +19,7 @@ export class OrdersRepository  {
 
     @InjectRepository (Order)
     private readonly ordersRepository: Repository<Order>,
-
-
+    private readonly notificationRepository: NotificationsRepository
   ) {} 
 
   async getAllOrders (): Promise<Order []> {
@@ -93,7 +93,20 @@ export class OrdersRepository  {
 
     const order = await this.getOrderById (id);
     if (!order) return null;
-  
+
+
+  //* Si el estado es diferente al actual, procedemos a actualizar y notificar
+  if (order.status !== status) {
+    order.status = status;
+    await this.ordersRepository.save(order);
+
+    // Notificar solo si hay un cambio real de estado
+    await this.notificationRepository.notifyStatusChange(order);
+    console.log('se envio el email al cliente')
+  }
+  //* fin de logica para noticar al actualizar el estado
+
+
     await this.ordersRepository.update (id, { status, statusHistory });  
     return this.getOrderById (id);
 
