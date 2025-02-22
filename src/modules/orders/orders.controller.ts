@@ -61,7 +61,7 @@ export class OrdersController {
   @Roles (Role.TECHN)
   @UseGuards(AuthGuard, RoleGuard)
 
-  async getOrdersByTechnId (
+  async getOrdersByTechnName (
 
     @Param('technId') technId: string,
 
