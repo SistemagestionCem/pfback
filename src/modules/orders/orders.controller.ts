@@ -87,14 +87,25 @@ export class OrdersController {
   }
 
   @Post ('create')
-  @Roles (Role.ADMIN)
-  @UseGuards (AuthGuard, RoleGuard)
+  /*@Roles (Role.ADMIN)
+  @UseGuards (AuthGuard, RoleGuard)*/
 
   async createOrder (@Body () createOrderDto: CreateOrderDto): Promise<Order> {
 
     return this.ordersService.createOrder (createOrderDto);
 
   }
+
+  /**********/
+
+  @Patch ('update/:id')
+
+  async updateOrder (@Param ('id') id: string, @Body () updateOrderDto: UpdateOrderDto): Promise<Order> {
+    return await this.ordersService.updateOrder (id, updateOrderDto);
+
+  }
+
+  /**********/
 
   /*@Patch('technicaldata/:id') // Endpoint verificado!
   @Roles(Role.TECHN)

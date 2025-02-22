@@ -150,6 +150,48 @@ export class OrdersService {
 
   /***********/
 
+  /***********/
+
+  async updateOrder (id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+
+    const order = await this.ordersRepository.getOrderById (id);
+
+    if (!order) {
+
+      throw new NotFoundException (`Orden con ID ${id} no encontrada.`);
+
+    }
+  
+    const { isActive: _isActive, createdAt: __createdAt,...allowedUpdates } = updateOrderDto;
+  
+    if (allowedUpdates.status) {
+
+      const now = new Date ();
+  
+      order.statusWithDate = {
+
+        status: allowedUpdates.status,
+        date: now,
+
+      };
+
+      order.statusHistory.push ({
+
+        status: allowedUpdates.status,
+        date: now,
+
+      });
+
+    }
+  
+    Object.assign (order, allowedUpdates);
+  
+    return await this.ordersRepository.saveOrder1 (order);
+    
+  }
+  
+  /***********/
+
   /*async updateTechnicalData(
     id: string,
     updateTechnicalDataDto: UpdateTechicalDataDto,
