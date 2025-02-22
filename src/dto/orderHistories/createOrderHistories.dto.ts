@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+/*import { Type } from 'class-transformer';
 import { IsUUID, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateOrderHistoriesDto {
@@ -13,4 +13,4 @@ export class CreateOrderHistoriesDto {
   @IsOptional()
   @Type(() => Date)
   readonly createdAt?: Date;
-}
+}*/

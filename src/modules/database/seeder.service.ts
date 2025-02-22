@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../users/User.entity';
 import { Order } from '../orders/Order.entity';
 import { Evidence } from '../evidences/Evidence.entity';
-import { OrderHistory } from '../orderHistories/orderHistory.entity';
+/*import { OrderHistory } from '../orderHistories/orderHistory.entity';*/
 
 import { Role } from 'src/enum/Role.enum';
 import { EquipmentType } from 'src/enum/equipmentype.enum';
@@ -24,8 +24,8 @@ export class SeedService {
     @InjectRepository(Evidence)
     private readonly evidenceRepository: Repository<Evidence>,
 
-    @InjectRepository(OrderHistory)
-    private readonly orderHistoryRepository: Repository<OrderHistory>,
+    /*@InjectRepository(OrderHistory)*/
+    /*private readonly orderHistoryRepository: Repository<OrderHistory>,*/
     private readonly dataSource: DataSource,
   ) {}
 
@@ -117,54 +117,54 @@ export class SeedService {
     // Crear órdenes con diferentes estados y equipos
     const orders = [
       this.orderRepository.create({
-        clientEmail: client1.email,
+        clientEmail: /*client1.email*/ 'cliente2@example.com',
         clientDni: 12345678,
         equipmentType: EquipmentType.CELULAR,
         imei: '123456789012345',
-        assignedTechnician: technician,
+        assignedTechn: technician,
         description: 'Cambio de pantalla',
-        status: OrderStatus.STARTED,
-        user: client1,
+        status: OrderStatus.REVISION,
+        Admin: client1,
       }),
       this.orderRepository.create({
-        clientEmail: client2.email,
+        clientEmail: /*client2.email*/ 'cliente3@example.com',
         clientDni: 87654321,
         equipmentType: EquipmentType.LAPTOP,
         imei: '987654321098765',
-        assignedTechnician: technician,
+        assignedTechn: technician,
         description: 'Reparación de teclado',
-        status: OrderStatus.STARTED,
-        user: client2,
+        status: OrderStatus.REVISION,
+        Admin: client2,
       }),
       this.orderRepository.create({
-        clientEmail: client1.email,
+        clientEmail: /*client2.email*/ 'cliente2@example.com',
         clientDni: 12345678,
         equipmentType: EquipmentType.TABLET,
         imei: '456789012345678',
-        assignedTechnician: technician,
+        assignedTechn: technician,
         description: 'Fallo en batería',
-        status: OrderStatus.COMPLETED,
-        user: client1,
+        status: OrderStatus.REVISION,
+        Admin: client1,
       }),
       this.orderRepository.create({
-        clientEmail: client2.email,
+        clientEmail: /*client2.email*/ 'cliente2@example.com',
         clientDni: 87654321,
         equipmentType: EquipmentType.CELULAR,
         imei: '321098765432109',
-        assignedTechnician: technician,
+        assignedTechn: technician,
         description: 'Cambio de display',
-        status: OrderStatus.PENDING,
-        user: client2,
+        status: OrderStatus.REVISION,
+        Admin: client2,
       }),
       this.orderRepository.create({
-        clientEmail: client2.email,
+        clientEmail: /*client2.email*/ 'cliente2@example.com',
         clientDni: 87654321,
         equipmentType: EquipmentType.CELULAR,
         imei: '321098765432109',
-        assignedTechnician: technician1,
+        assignedTechn: technician1,
         description: 'No enciende',
-        status: OrderStatus.STARTED,
-        user: client2,
+        status: OrderStatus.REVISION,
+        Admin: client2,
       }),
     ];
 
@@ -189,7 +189,7 @@ export class SeedService {
     }
 
     //Agregar historial de eventos a cada orden
-    for (const order of savedOrders) {
+    /*for (const order of savedOrders) {
       const orderHistories = [
         this.orderHistoryRepository.create({
           event: 'Servicio iniciado',
@@ -217,7 +217,7 @@ export class SeedService {
       ];
       await this.orderHistoryRepository.save(orderHistories);
       console.log(`Historial creado para orden ID ${order.id}`);
-    }
+    }*/
 
    
     return "cargada la informacion a la base de datos"

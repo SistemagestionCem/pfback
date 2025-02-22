@@ -7,7 +7,7 @@ import { Order } from './Order.entity';
 import { OrderStatus } from 'src/enum/orderstatus.enum';
 import { UpdateTechicalDataDto } from '../../dto/orders/updateTechData.dto';
 import { UpdateOrderDto } from 'src/dto/orders/updateOrder.dto';
-import { CreateOrderDto } from 'src/dto/orders/createOrder.dto';
+/*import { CreateOrderDto } from 'src/dto/orders/createOrder.dto';*/
 
 @Injectable ()
 
@@ -17,7 +17,6 @@ export class OrdersRepository  {
 
     @InjectRepository (Order)
     private readonly ordersRepository: Repository<Order>,
-
 
   ) {} 
 
@@ -33,7 +32,7 @@ export class OrdersRepository  {
 
   }
 
-  async getOrdersByTechnId (assignedTechnicianId: string): Promise<Order []> {
+  /*async getOrdersByTechnId (assignedTechnicianId: string): Promise<Order []> {
 
     return this.ordersRepository.find ({
 
@@ -42,25 +41,58 @@ export class OrdersRepository  {
       
     });
 
-  }
-
-  /*async getByStatus (status: string): Promise<Order []> {
-
-    const orderStatus = status as OrderStatus;
-    return this.ordersRepository.find ({ where: { status: orderStatus } });
-
   }*/
+
+  /*********/
+
+  async getOrdersByTechnName (technName: string): Promise<Order []> {
+
+    return this.ordersRepository.find ({
+
+      where: {
+
+        assignedTechn: {
+
+          name: technName, 
+
+        },
+
+      },
+
+      relations: ['assignedTechn', 'Admin'], 
+
+    });
+
+  }  
+
+  /*********/
+
+  /*async getByStatus(status: string): Promise<Order[]> {
+    const orderStatus = status as OrderStatus;
+    return this.ordersRepository.find({ where: { status: orderStatus } });
+  }*/
+
+  /*async getOrderById(id: string): Promise<Order | null> {
+    return this.ordersRepository.findOne({
+      where: { id }, 
+      relations: ['nameTech', 'Admin'],
+    });   
+  }*/
+
+  /*********/
 
   async getOrderById (id: string): Promise<Order | null> {
 
     return this.ordersRepository.findOne ({
 
-      where: { id }, 
-      relations: ['assignedTechnician'], 
+      where: { id },
+      relations: ['assignedTechn', 'Admin'], 
 
     });
-   
-  }   
+
+  }  
+
+  /*********/  
 
   async createOrder (orderData: Partial<Order>): Promise<Order> {
 
@@ -109,12 +141,12 @@ export class OrdersRepository  {
 
     await this.ordersRepository.update (id, updateData);
     return this.ordersRepository.findOne ({ where: { id } });
-
+    
   }
 
   async findOne (id: string): Promise<Order | null> {
 
-    return this.ordersRepository.findOne({ where: { id } });
+    return this.ordersRepository.findOne ({ where: { id } });
 
   }
   
@@ -124,7 +156,7 @@ export class OrdersRepository  {
 
     if (!order) {
 
-      throw new NotFoundException('Orden no encontrada');
+      throw new NotFoundException ('Orden no encontrada');
 
     }
 
@@ -138,7 +170,7 @@ export class OrdersRepository  {
     Object.assign (order, updateOrderDto);
     return await this.ordersRepository.save (order);
   
-}
+  }
 
 }
 
