@@ -20,8 +20,8 @@ export class NotificationsRepository {
     private readonly mailService: MailService,
   ) {}
   //* funciones adicionales para remindBudgetAcceptance
-  async getPendingOrders() {
-    return this.orderRepository.find({ where: { status: OrderStatus.PENDING } });
+  async getRevisionOrders() {
+    return this.orderRepository.find({ where: { status: OrderStatus.REVISION } });
   }
 
   async countNotifications(orderId: string) {
@@ -42,13 +42,21 @@ export class NotificationsRepository {
   //* Notificación de cambio de estado (cuando la orden cambia)
   async notifyStatusChange(order: Order) {
     const statusMessageMap = {
-      [OrderStatus.ACTUALIZAR]:
-        'Se ha realizado una actualización en su orden.',
-      [OrderStatus.PENDING]:
-        'Su orden ha sido registrada y está pendiente de revisión.',
-      [OrderStatus.STARTED]: 'El servicio de reparación ha comenzado.',
-      [OrderStatus.COMPLETED]:
-        'Su equipo ha sido reparado y está listo para recoger.',
+    [OrderStatus.REVISION]: 
+      'Su equipo está en revisión. Pronto un presupuesto del servicio estara anclado a su orden para su aprobación.',
+    [OrderStatus.CONFIRMADO]: 
+      'Su orden ha sido confirmada. Se procederá con el inicio del servicio. Gracias por la confianza',
+    [OrderStatus.CANCELADO]: 
+      'Su orden ha sido cancelada. Si necesita asistencia, por favor contáctenos.',
+    [OrderStatus.REPARACION]: 
+      'Su equipo está siendo reparado. Le notificaremos cuando el proceso haya finalizado.',
+    [OrderStatus.FINALIZADO]: 
+      'La reparación de su equipo ha sido completada. Puede proceder con el pago para su entrega.',
+    [OrderStatus.PAGO]: 
+      'Hemos recibido su pago. Su equipo está listo para ser retirado en nuestra tienda.',
+    [OrderStatus.RETIRADO]: 
+      'Su equipo ha sido retirado. Gracias por confiar en nuestro servicio.',
+  
     };
 
     const latestStatus = order.status;
