@@ -23,7 +23,7 @@ export class UsersRepository {
     return await this.usersRepository.findOne({ where: { id } });
   }
 
-  async findByRole(id: string, role: Role): Promise<User> {
+  /*async findByRole(id: string, role: Role): Promise<User> {
     const userFound = await this.usersRepository.findOne({
       where: { id, role },
     });
@@ -33,7 +33,29 @@ export class UsersRepository {
     }
 
     return userFound;
+  }*/
+
+  /**********/
+
+  async findByRole (name: string, role: Role): Promise<User> {
+
+    const userFound = await this.usersRepository.findOne ({
+
+      where: { name, role }, 
+
+    });
+  
+    if (!userFound) {
+
+      throw new NotFoundException (`El usuario con el nombre "${name}" y el rol "${role}" no fue encontrado.`);
+
+    }
+  
+    return userFound;
+    
   }
+    
+  /**********/
 
   async changeRole(role: Partial<User>, id: string): Promise<Object> {
     console.log(typeof role.role);

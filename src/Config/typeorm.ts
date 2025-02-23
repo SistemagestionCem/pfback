@@ -13,7 +13,7 @@ const database = {
   port: process.env.DB_PORT as unknown as number,
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  synchronize: true,
+  synchronize: /*true*/false,
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
   autoLoadEntities: true,
