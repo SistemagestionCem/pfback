@@ -17,7 +17,7 @@ const database = {
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
   autoLoadEntities: true,
-  logging: true,
+ // logging: true,
   // dropSchema: true,
 };
 

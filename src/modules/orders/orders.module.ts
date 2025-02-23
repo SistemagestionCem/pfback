@@ -10,6 +10,7 @@ import { Order } from './Order.entity';
 import { EvidencesModule } from '../evidences/evidences.module';
 import { UsersModule } from '../users/users.module';
 import { PaymentsModule } from '../payments/payments.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -18,11 +19,12 @@ import { PaymentsModule } from '../payments/payments.module';
     forwardRef(() => EvidencesModule),
     forwardRef(() => UsersModule),
     forwardRef(() => PaymentsModule),
+    forwardRef(() => NotificationsModule),
   ],
 
-  controllers: [OrdersController],
+  controllers: [OrdersController], 
   providers: [OrdersService, OrdersRepository],
-
+  
   exports: [OrdersService, OrdersRepository],
 })
 export class OrdersModule {}
