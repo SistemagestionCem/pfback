@@ -54,6 +54,6 @@ export class User {
   })
   createdAt: Date;
 
-  @OneToMany(() => Order, (orders) => orders.user)
-  orders: Order[];
+  @OneToMany(() => Order, (order) => order.users)
+  order: Order[];
 }

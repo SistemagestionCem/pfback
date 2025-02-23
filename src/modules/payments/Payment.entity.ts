@@ -57,7 +57,7 @@ export class Payment {
   @Column({ type: 'varchar', length: 50, nullable: true })
   externalOrderId: string;
 
-  @OneToOne ( () => Order, (order) => order.payment)
+  @OneToOne ( () => Order, (order) => order.payments)
   @JoinColumn ({ name: 'order_id' })
   order: Order;
 
