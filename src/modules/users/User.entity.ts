@@ -13,6 +13,7 @@ export class User {
   @Column({
     nullable: false,
     length: 20,
+    unique:true
   })
   name: string;
 

@@ -21,6 +21,6 @@ const database = {
   // dropSchema: true,
 };
 
-export default registerAs('typeorm', () => database);
+ export default registerAs('typeorm', () => database);
 
-export const connection = new DataSource(database as DataSourceOptions);
+ export const connection = new DataSource(database as DataSourceOptions);
