@@ -8,7 +8,7 @@ import { Order } from '../orders/Order.entity';
 })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+id: string;
 
   @Column({
     nullable: false,
@@ -55,6 +55,11 @@ export class User {
   })
   createdAt: Date;
 
-  @OneToMany(() => Order, (order) => order.users)
-  order: Order[];
+  //@OneToMany(() => Order, (order) => order.users)
+  //orders: Order[];
+  @OneToMany(() => Order, (order) => order.Admin)
+adminOrders: Order[];
+
+@OneToMany(() => Order, (order) => order.assignedTechn)
+technicianOrders: Order[];
 }

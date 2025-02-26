@@ -114,8 +114,8 @@ import { v7 as uuid } from 'uuid';
 
 export class Order {
 
-  @PrimaryGeneratedColumn ('uuid')
-  id: string = uuid ();
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column ({ name: 'clientEmail' })
   clientEmail: string;
@@ -163,13 +163,13 @@ export class Order {
   @CreateDateColumn() 
   createdAt: Date;
 
-  @ManyToOne(() => User, (user) => user.order, { eager: true })
-@JoinColumn({ name: 'adminName', referencedColumnName: 'id' })
-Admin: User;
-
-@ManyToOne(() => User, (user) => user.order, { eager: true })
-@JoinColumn({ name: 'technName', referencedColumnName: 'id' })
-assignedTechn: User;
+  @ManyToOne(() => User, (user) => user.adminOrders, { eager: true })
+  @JoinColumn({ name: 'adminId', referencedColumnName: 'id' })
+  Admin: User;
+  
+  @ManyToOne(() => User, (user) => user.technicianOrders, { eager: true })
+  @JoinColumn({ name: 'technicianId', referencedColumnName: 'id' })
+  assignedTechn: User;
 
   @OneToMany(() => Evidence, (evidence) => evidence.order)
   evidences: Evidence[];
@@ -179,6 +179,6 @@ assignedTechn: User;
 
   @OneToOne(() => Payment, (payment) => payment.order)
   payments: Payment;
-  users: any;
+ // users: any;
  
 }
