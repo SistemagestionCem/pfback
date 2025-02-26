@@ -24,13 +24,15 @@ export class OrdersRepository  {
 
   async getAllOrders (): Promise<Order []> {
 
-    return this.ordersRepository.find ();
+    return this.ordersRepository.find({
+      relations: { payments: true },
+    });
 
   }
 
   async getOrdersByClientEmail (clientEmail: string): Promise<Order []> {
 
-    return this.ordersRepository.find ({ where: { clientEmail } });
+    return this.ordersRepository.find ({ where: { clientEmail }, relations: ['payments'] });
 
   }
 
