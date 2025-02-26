@@ -123,9 +123,7 @@ export class Order {
   @Column ({ name: 'clientDni' })
   clientDni: number;
 
-  @ManyToOne (() => User, (user) => user.order, { eager: true })
-  @JoinColumn ({ name: 'technName', referencedColumnName: 'name'  }) 
-  assignedTechn: User;
+ 
 
   @Column ({
 
@@ -165,9 +163,13 @@ export class Order {
   @CreateDateColumn() 
   createdAt: Date;
 
-  @ManyToOne (() => User, (user) => user.order, { eager: true })
-  @JoinColumn ({ name: 'adminName', referencedColumnName: 'name' })
-  Admin: User;
+  @ManyToOne(() => User, (user) => user.order, { eager: true })
+@JoinColumn({ name: 'adminName', referencedColumnName: 'id' })
+Admin: User;
+
+@ManyToOne(() => User, (user) => user.order, { eager: true })
+@JoinColumn({ name: 'technName', referencedColumnName: 'id' })
+assignedTechn: User;
 
   @OneToMany(() => Evidence, (evidence) => evidence.order)
   evidences: Evidence[];
