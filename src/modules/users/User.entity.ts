@@ -12,7 +12,7 @@ export class User {
 
   @Column({
     nullable: false,
-    length: 20,
+    length: 50,
     unique:true
   })
   name: string;
