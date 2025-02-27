@@ -34,8 +34,8 @@ export class OrdersController {
 
   /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/
   @Get () // Endpoint verificado!
-  @Roles (Role.ADMIN)
-  @UseGuards (AuthGuard, RoleGuard)
+  //@Roles (Role.ADMIN)
+  //@UseGuards (AuthGuard, RoleGuard)
 
   async getAllOrders (): Promise<Order []> {
 
@@ -58,8 +58,8 @@ export class OrdersController {
   }
 
   @Get ('technician/:technName') // Endpoint verificado!
-  @Roles (Role.TECHN)
-  @UseGuards(AuthGuard, RoleGuard)
+  //@Roles (Role.TECHN)
+  //@UseGuards(AuthGuard, RoleGuard)
 
   async getOrdersByTechnName (
 
@@ -77,8 +77,8 @@ export class OrdersController {
   }*/
 
   @Get (':id') // Endpoint verificado!
-  @Roles (Role.ADMIN, Role.CLIENT)
-  @UseGuards (AuthGuard, RoleGuard)
+  //@Roles (Role.ADMIN, Role.CLIENT)
+ // @UseGuards (AuthGuard, RoleGuard)
 
   async getOrderById (@Param ('id') orderId: string): Promise<Order> {
 
