@@ -34,13 +34,10 @@ id: string;
   })
   phone: string;
 
-  @Column({
-    nullable: true,
-    type: 'int',
-    default: 99999999,
-    unique: true,
-  })
-  dni: number;
+ 
+  // Define el campo DNI como un string
+  @Column({ type: 'varchar', length: 8 }) 
+  dni: string;
 
   @Column({
     type: 'enum',

@@ -33,10 +33,7 @@ export class SignUpUserDto {
   phone: string;
 
   @IsNotEmpty({ message: 'El campo DNI es Obligatorio' })
-  @IsNumber()
-
-  @Min(10000000)
-  @Max(99999999)
+  @IsString()
   dni: number;
 }
 
