@@ -7,5 +7,5 @@ export enum PaymentStatus {
     REJECTED = 'REJECTED',
     REFUNDED = 'REFUNDED',
     
-  }
+}
   

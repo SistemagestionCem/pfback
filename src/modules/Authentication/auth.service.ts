@@ -77,10 +77,24 @@ export class AuthService {
       throw new BadRequestException(errorsMessage.join(';'));
     }
 
-    const userFound = await this.user.findOne({
+    /*const userFound = await this.user.findOne({
       where: { email: loginCreds.email },
       relations: { order: true },
+    });*/
+
+    /**********/
+
+    const userFound = await this.user.findOne ({
+
+      where: { email: loginCreds.email },
+      relations: { assignedOrders: true, adminOrders: true },
+
     });
+
+    /**********/
+    
+
+
 
     if (!userFound) {
       throw new BadRequestException('El usuario no existe');

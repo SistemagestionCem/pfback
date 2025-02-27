@@ -9,11 +9,10 @@ import { PaymentsRepository } from './payments.repository';
 import { OrdersModule } from '../orders/orders.module';
 import { Order } from '../orders/Order.entity';
 
-
 @Module ({
 
   imports: [TypeOrmModule.forFeature ([Payment, Order]),
-  forwardRef(() => OrdersModule), 
+  forwardRef (() => OrdersModule), 
 ],
   controllers: [PaymentsController],
   providers: [PaymentsService, PaymentsRepository],

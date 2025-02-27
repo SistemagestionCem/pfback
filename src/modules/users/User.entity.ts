@@ -13,7 +13,7 @@ export class User {
   @Column({
     nullable: false,
     length: 20,
-    unique:true
+    unique: true,
   })
   name: string;
 
@@ -55,6 +55,16 @@ export class User {
   })
   createdAt: Date;
 
-  @OneToMany(() => Order, (order) => order.users)
-  order: Order[];
+  /*@OneToMany(() => Order, (order) => order.users)
+  order: Order[];*/
+
+  /**********/
+
+  @OneToMany(() => Order, (order) => order.assignedTechn)
+  assignedOrders: Order[];
+
+  @OneToMany(() => Order, (order) => order.Admin)
+  adminOrders: Order[];
+
+  /**********/
 }

@@ -1,93 +1,4 @@
 
-/*import {
-
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-
-} from 'typeorm';
-
-import { User } from '../users/User.entity';
-import { Payment } from '../payments/Payment.entity';
-import { Notification } from '../notifications/Notification.entity';
-import { Evidence } from '../evidences/Evidence.entity';
-import { OrderHistory } from '../orderHistories/orderHistory.entity';
-import { EquipmentType } from '../../enum/equipmentype.enum';
-import { OrderStatus } from 'src/enum/orderstatus.enum';
-import { v7 as uuid } from 'uuid';
-
-@Entity ({ name: 'orders' })
-
-export class Order {
-
-  @PrimaryGeneratedColumn ('uuid')
-  id: string = uuid ();
-
-  @Column ({ name: 'clientEmail' })
-  clientEmail: string;
-
-  @Column ({ name: 'clientDni' })
-  clientDni: number;
-
-  @Column ({
-
-    type: 'enum',
-    enum: EquipmentType,
-    nullable: false,
-    default: EquipmentType.EQUIPO,
-    update: true,
-
-  })
-  equipmentType: EquipmentType;
-
-  @Column ()
-  imei: string;
-
-  @ManyToOne (() => User, { nullable: true })
-  @JoinColumn ({ name: 'assignedTechnicianId' })
-  assignedTechnician: User | null;
-
-  @Column ()
-  description: string;
-
-  @Column ({
-
-    type: 'enum',
-    enum: OrderStatus,
-    nullable: false,
-    default: OrderStatus.ACTUALIZAR,
-
-  })
-  status: OrderStatus;
-
-  @Column ({ type: 'boolean', default: true })
-  isActive: boolean;
-
-  @ManyToOne (() => User, (user) => user.orders, { eager: true })
-  @JoinColumn ({ name: 'userId' })
-  user: User;
-
-  @OneToMany (() => OrderHistory, (orderHistory) => orderHistory.order)
-  orderHistories: OrderHistory [];
-
-  @OneToMany (() => Evidence, (evidence) => evidence.order)
-  evidences: Evidence [];
-
-  @OneToMany (() => Notification, (notification) => notification.order)
-  notifications: Notification [];
-
-  @OneToOne (() => Payment, (payment) => payment.order)
-  payment: Payment;
-
-  @Column ({ type: 'jsonb', default: [] })
-  statusHistory: { [key: string]: string }[];
-  
-}
-*/
 
 import {
 
@@ -97,8 +8,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  JoinColumn,
-  CreateDateColumn,  
+  JoinColumn,  
 
 } from 'typeorm';
 
@@ -107,7 +17,7 @@ import { Payment } from '../payments/Payment.entity';
 import { Notification } from '../notifications/Notification.entity';
 import { Evidence } from '../evidences/Evidence.entity';
 import { EquipmentType } from '../../enum/equipmentype.enum';
-import { OrderStatus } from 'src/enum/orderstatus.enum';
+import { OrderStatus } from '../../enum/orderstatus.enum';
 import { v7 as uuid } from 'uuid';
 
 @Entity ({ name: 'orders' })
@@ -117,14 +27,14 @@ export class Order {
   @PrimaryGeneratedColumn ('uuid')
   id: string = uuid ();
 
-  @Column ({ name: 'clientEmail' })
+  @Column ()
   clientEmail: string;
 
-  @Column ({ name: 'clientDni' })
+  @Column ()
   clientDni: number;
 
-  @ManyToOne (() => User, (user) => user.order, { eager: true })
-  @JoinColumn ({ name: 'technName', referencedColumnName: 'name'  }) 
+  @ManyToOne (() => User, (user) => user.assignedOrders, { eager: true })
+  @JoinColumn ({ name: 'technName', referencedColumnName: 'name' }) 
   assignedTechn: User;
 
   @Column ({
@@ -153,30 +63,29 @@ export class Order {
 
   status: OrderStatus;  
 
-  @Column({ type: 'jsonb', nullable: true }) 
+  @Column ({ type: 'jsonb', nullable: true }) 
   statusWithDate: { status: string; date: Date };
 
-  @Column({ type: 'jsonb', default: [] })
+  @Column ({ type: 'jsonb', default: [] })
   statusHistory: { status: string; date: Date }[]; 
   
   @Column ({ type: 'boolean', default: true })
   isActive: boolean;
 
-  @CreateDateColumn() 
-  createdAt: Date;
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date | null;
 
-  @ManyToOne (() => User, (user) => user.order, { eager: true })
+  @ManyToOne (() => User, (user) => user.adminOrders, { eager: true })
   @JoinColumn ({ name: 'adminName', referencedColumnName: 'name' })
   Admin: User;
 
-  @OneToMany(() => Evidence, (evidence) => evidence.order)
-  evidences: Evidence[];
+  @OneToMany (() => Evidence, (evidence) => evidence.order)
+  evidences: Evidence [];
 
-  @OneToMany(() => Notification, (notification) => notification.order)
-  notifications: Notification[];
+  @OneToMany (() => Notification, (notification) => notification.order)
+  notifications: Notification [];
 
-  @OneToOne(() => Payment, (payment) => payment.order)
-  payments: Payment;
-  users: any;
+  @OneToOne (() => Payment, (payment) => payment.order)
+  payment: Payment;
  
 }
