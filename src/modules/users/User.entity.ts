@@ -35,7 +35,10 @@ id: string;
   phone: string;
 
   @Column({
-   
+    nullable: true,
+    type: 'int',
+    default: 99999999,
+    unique: true,
   })
   dni: number;
 
