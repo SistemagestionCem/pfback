@@ -35,8 +35,7 @@ export class SignUpUserDto {
   @IsNotEmpty({ message: 'El campo DNI es Obligatorio' })
   @IsNumber()
 
-  @Min(10000000)
-  @Max(99999999)
+  @IsNotEmpty({ message: 'El campo DNI es Obligatorio' })
   dni: number;
 }
 
