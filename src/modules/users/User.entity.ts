@@ -13,6 +13,7 @@ export class User {
   @Column({
     nullable: false,
     length: 20,
+    unique: true,
   })
   name: string;
 
@@ -59,13 +60,11 @@ export class User {
 
   /**********/
 
-  @OneToMany (() => Order, (order) => order.assignedTechn)
-  assignedOrders: Order [];
+  @OneToMany(() => Order, (order) => order.assignedTechn)
+  assignedOrders: Order[];
 
-  @OneToMany (() => Order, (order) => order.Admin)
-  adminOrders: Order [];
+  @OneToMany(() => Order, (order) => order.Admin)
+  adminOrders: Order[];
 
   /**********/
-
-
 }

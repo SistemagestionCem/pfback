@@ -1,5 +1,3 @@
-
-
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrdersController } from './orders.controller';
@@ -11,23 +9,18 @@ import { UsersModule } from '../users/users.module';
 import { PaymentsModule } from '../payments/payments.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 
-@Module ({
-
+@Module({
   imports: [
-
-    TypeOrmModule.forFeature ([Order]),
-    forwardRef (() => EvidencesModule),
-    forwardRef (() => UsersModule),
-    forwardRef (() => PaymentsModule),
-    forwardRef (() => NotificationsModule),
-
+    TypeOrmModule.forFeature([Order]),
+    forwardRef(() => EvidencesModule),
+    forwardRef(() => UsersModule),
+    forwardRef(() => PaymentsModule),
+    forwardRef(() => NotificationsModule),
   ],
 
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository],
 
   exports: [OrdersService, OrdersRepository],
-
 })
-
 export class OrdersModule {}
