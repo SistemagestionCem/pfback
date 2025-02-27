@@ -1,6 +1,6 @@
 
 
-import { Injectable, NotFoundException} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from './payment.entity';
@@ -8,41 +8,82 @@ import { Order } from '../orders/order.entity';
 import { PaymentsRepository } from './payments.repository';
 import { CreatePaymentDto } from '../../dto/payments/CreatePayment.dto';
 import { UpdatePaymentDto } from '../../dto/payments/updatePayment.dto';
-import { PaymentStatus } from 'src/enum/payment.status.enum';
+import { PaymentStatus } from '../../enum/payment.status.enum';
 
-@Injectable()
+@Injectable ()
+
 export class PaymentsService {
-  constructor(
+
+  constructor (
+
     private readonly paymentsRepository: PaymentsRepository,
 
-    @InjectRepository(Order)
+    @InjectRepository (Order)
     private readonly orderRepository: Repository<Order>,
+
   ) {}
 
+  async createPayment (createPaymentDto: CreatePaymentDto): Promise<Payment> {
 
-  async createPayment(createPaymentDto: CreatePaymentDto): Promise<Payment> {
-    const order = await this.orderRepository.findOne({ where: { id: createPaymentDto.order_id } });
+    const { order_id, price } = createPaymentDto;
+  
+    if (!order_id) {
 
+      throw new BadRequestException ('El ID de la orden es obligatorio.');
+
+    }
+  
+    const order = await this.orderRepository.findOne ({ where: { id: order_id } });
+  
     if (!order) {
-      throw new NotFoundException(`Orden con ID ${createPaymentDto.order_id} no encontrada.`);
+
+      throw new NotFoundException (`Orden con ID ${order_id} no encontrada.`);
+
     }
 
-    return await this.paymentsRepository.createPayment(order, createPaymentDto);
-  } 
+    if (!price || price <= 0) {
 
-    async updatePaymentStatus(paymentId: string, updatePaymentDto: UpdatePaymentDto): Promise<Payment> {
-      const payment = await this.paymentsRepository.findPaymentById(paymentId);
-    
-      if (!payment) {
-        throw new NotFoundException(`Pago con ID ${paymentId} no encontrado.`);
-      }    
+      throw new BadRequestException ('El precio del pago debe ser un número positivo.');
 
-      if (updatePaymentDto.status === PaymentStatus.APPROVED) {
-        payment.invoicePaidAt = new Date();
-      }
-    
-      return await this.paymentsRepository.updatePaymentStatus(payment, updatePaymentDto);
-    }     
+    }
+  
+    if (order.payment) {
+
+      throw new ConflictException (`La orden con ID ${order_id} ya tiene un pago registrado.`);
+        
+    }
+
+    return this.paymentsRepository.createPayment (order, createPaymentDto);
+
+  }
+
+  async updatePaymentStatus (paymentId: string, updatePaymentDto: UpdatePaymentDto): Promise<Payment> {
+
+    const payment = await this.paymentsRepository.findPaymentById (paymentId);
+  
+    const newStatus = updatePaymentDto.status as PaymentStatus;
+  
+    if (!Object.values (PaymentStatus).includes (newStatus)) {
+
+      throw new BadRequestException (`Estado de pago inválido: ${updatePaymentDto.status}`);
+
+    }
+  
+    if (payment.status === PaymentStatus.APPROVED) {
+
+      throw new ConflictException (`El pago con ID ${paymentId} ya está aprobado y no puede modificarse.`);
+
+    }
+  
+    if (newStatus === PaymentStatus.APPROVED) {
+
+      payment.invoicePaidAt = new Date ();
+
+    }
+  
+    return this.paymentsRepository.updatePaymentStatus (payment, { ...updatePaymentDto, status: newStatus });     
+
+  }   
     
 }   
 

@@ -1,5 +1,7 @@
 
+
 import {
+
   Controller,
   Patch,
   Param,
@@ -7,45 +9,41 @@ import {
   Get,
   Post,
   Put,
-  UseGuards,
+  
 } from '@nestjs/common';
 
 import { OrdersService } from '../orders/orders.service';
 import { CreateOrderDto } from '../../dto/orders/createOrder.dto';
 import { Order } from './Order.entity';
 import { UpdateOrderDto } from '../../dto/orders/updateOrder.dto';
-/*import { UpdateTechicalDataDto } from 'src/dto/orders/updateTechData.dto';
-import { UpdateStatusDto } from 'src/dto/orders/updateTechStatus.dto';*/
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RoleGuard } from 'src/guards/roles/role.guard';
 import { Roles } from 'src/decorators/role/role.decorator';
 import { Role } from 'src/enum/Role.enum';
 
-@Controller('orders')
+@Controller ('orders')
 
 export class OrdersController {
 
   constructor (
 
     private readonly ordersService: OrdersService,
-    /*private readonly orderHistoriesService: OrderHistoriesService,*/
 
   ) {}
 
-  /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/
-  @Get () // Endpoint verificado!
-  @Roles (Role.ADMIN)
-  @UseGuards (AuthGuard, RoleGuard)
+  @Get ()
+  /*@Roles (Role.ADMIN)
+  @UseGuards (AuthGuard, RoleGuard)*/
 
   async getAllOrders (): Promise<Order []> {
 
     return this.ordersService.getAllOrders ();
 
   }
-
-  @Get ('email/:clientEmail') // Endpoint verificado!
-  @Roles (Role.ADMIN)
-  @UseGuards (AuthGuard, RoleGuard)
+  
+  @Get ('email/:clientEmail') 
+  /*@Roles (Role.ADMIN)
+  @UseGuards (AuthGuard, RoleGuard)*/
 
   async getOrdersByClientEmail (
 
@@ -57,28 +55,23 @@ export class OrdersController {
 
   }
 
-  @Get ('technician/:technName') // Endpoint verificado!
-  @Roles (Role.TECHN)
-  @UseGuards(AuthGuard, RoleGuard)
+  @Get ('technician/:technName') 
+  /*@Roles (Role.TECHN)
+  @UseGuards (AuthGuard, RoleGuard)*/
 
   async getOrdersByTechnName (
 
-    @Param('technId') technId: string,
+    @Param ('technName') technName: string,
 
   ): Promise<Order []> {
 
-    return this.ordersService.getOrdersByTechnName (technId);
+    return this.ordersService.getOrdersByTechnName (technName);
 
   }
 
-  /*@Get('status/:status')
-  async getByStatus(@Param ('status') status: OrderStatus): Promise<Order[]> {
-    return this.ordersService.getByStatus(status);
-  }*/
-
-  @Get (':id') // Endpoint verificado!
-  @Roles (Role.ADMIN, Role.CLIENT)
-  @UseGuards (AuthGuard, RoleGuard)
+  @Get (':id') 
+  /*@Roles (Role.ADMIN, Role.CLIENT)
+  @UseGuards (AuthGuard, RoleGuard)*/
 
   async getOrderById (@Param ('id') orderId: string): Promise<Order> {
 
@@ -96,45 +89,18 @@ export class OrdersController {
 
   }
 
-  /**********/
-
   @Patch ('update/:id')
 
   async updateOrder (@Param ('id') id: string, @Body () updateOrderDto: UpdateOrderDto): Promise<Order> {
-    return await this.ordersService.updateOrder (id, updateOrderDto);
+    
+    return this.ordersService.updateOrder (id, updateOrderDto);
 
-  }
+  }  
 
-  /**********/
-
-  /*@Patch('technicaldata/:id') // Endpoint verificado!
-  @Roles(Role.TECHN)
-  @UseGuards(AuthGuard, RoleGuard)
-  async updateTechnicalData(
-    @Param('id') orderId: string,
-    @Body() updateTechnicalDataDto: UpdateTechicalDataDto,
-  ): Promise<Order> {
-    return this.ordersService.updateTechnicalData(
-      orderId,
-      updateTechnicalDataDto,
-    );
-  }*/
-
-  /*@Patch(':id/status') // Endpoint verificado!
-  @Roles(Role.TECHN)
-  @UseGuards(AuthGuard, RoleGuard)
-  async updateOrderStatus(
-    @Param('id') orderId: string,
-    @Body() updateStatusDto: UpdateStatusDto,
-  ): Promise<Order> {
-    return this.ordersService.updateOrderStatus(orderId, updateStatusDto);
-  }*/
-
-  /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/
   /* Falso Delete*/
   @Put ('inactivate/:id')
-  @Roles (Role.ADMIN)
-  @UseGuards (AuthGuard, RoleGuard)
+  /*@Roles (Role.ADMIN)
+  @UseGuards (AuthGuard, RoleGuard)*/
 
   async inactivedelete (
 
@@ -146,5 +112,21 @@ export class OrdersController {
     return this.ordersService.inactiveDelete (orderId, updateOrderDto);
 
   }
+
+  @Put ('activate/:id')
+  /*@Roles (Role.ADMIN)
+  @UseGuards (AuthGuard, RoleGuard)*/
+
+  async reactivateOrder (
+
+    @Param('id') orderId: string,
+    @Body() updateOrderDto: UpdateOrderDto,
+
+  ): Promise<{ message: string }> {
+
+    return this.ordersService.reactivateOrder (orderId, updateOrderDto);
+
+  }
+  
 
 }

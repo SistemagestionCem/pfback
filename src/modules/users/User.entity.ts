@@ -54,6 +54,18 @@ export class User {
   })
   createdAt: Date;
 
-  @OneToMany(() => Order, (order) => order.users)
-  order: Order[];
+  /*@OneToMany(() => Order, (order) => order.users)
+  order: Order[];*/
+
+  /**********/
+
+  @OneToMany (() => Order, (order) => order.assignedTechn)
+  assignedOrders: Order [];
+
+  @OneToMany (() => Order, (order) => order.Admin)
+  adminOrders: Order [];
+
+  /**********/
+
+
 }
