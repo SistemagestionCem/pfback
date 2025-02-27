@@ -34,8 +34,10 @@ export class OrdersController {
 
   /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/
   @Get () // Endpoint verificado!
-  //@Roles (Role.ADMIN)
-  //@UseGuards (AuthGuard, RoleGuard)
+
+  // @Roles (Role.ADMIN)
+  // @UseGuards (AuthGuard, RoleGuard)
+
 
   async getAllOrders (): Promise<Order []> {
 
@@ -44,8 +46,8 @@ export class OrdersController {
   }
 
   @Get ('email/:clientEmail') // Endpoint verificado!
-  @Roles (Role.ADMIN)
-  @UseGuards (AuthGuard, RoleGuard)
+  // @Roles (Role.ADMIN)
+  // @UseGuards (AuthGuard, RoleGuard)
 
   async getOrdersByClientEmail (
 
@@ -58,8 +60,10 @@ export class OrdersController {
   }
 
   @Get ('technician/:technName') // Endpoint verificado!
-  //@Roles (Role.TECHN)
-  //@UseGuards(AuthGuard, RoleGuard)
+
+  // @Roles (Role.TECHN)
+  // @UseGuards(AuthGuard, RoleGuard)
+
 
   async getOrdersByTechnName (
 
@@ -133,8 +137,8 @@ export class OrdersController {
   /* Este Endpoint es de uso exclusivo del/los Administrador(es).*/
   /* Falso Delete*/
   @Put ('inactivate/:id')
-  @Roles (Role.ADMIN)
-  @UseGuards (AuthGuard, RoleGuard)
+  // @Roles (Role.ADMIN)
+  // @UseGuards (AuthGuard, RoleGuard)
 
   async inactivedelete (
 

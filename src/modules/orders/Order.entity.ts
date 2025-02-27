@@ -171,7 +171,7 @@ export class Order {
   @JoinColumn({ name: 'technicianId', referencedColumnName: 'id' })
   assignedTechn: User;
 
-  @OneToMany(() => Evidence, (evidence) => evidence.order)
+  @OneToMany(() => Evidence, (evidence) => evidence.order,  { eager: true })
   evidences: Evidence[];
 
   @OneToMany(() => Notification, (notification) => notification.order)
