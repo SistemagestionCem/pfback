@@ -66,6 +66,7 @@ export class SeedService {
     const hashedPassword = await bcrypt.hash('0123456789', 10);
 
     // Crear usuarios con diferentes roles
+    /*
     const users = [
       this.userRepository.create({
         name: 'Admin',
@@ -113,11 +114,12 @@ export class SeedService {
    
 
     const [admin, client1, client2, technician, technician1] = savedUsers;
-
+*/
     // Crear órdenes con diferentes estados y equipos
+    /*
     const orders = [
       this.orderRepository.create({
-        clientEmail: /*client1.email*/ 'cliente2@example.com',
+        clientEmail: 'cliente2@example.com',
         clientDni: 12345678,
         equipmentType: EquipmentType.CELULAR,
         imei: '123456789012345',
@@ -127,7 +129,7 @@ export class SeedService {
         Admin: client1,
       }),
       this.orderRepository.create({
-        clientEmail: /*client2.email*/ 'cliente3@example.com',
+        clientEmail:  'cliente3@example.com',
         clientDni: 87654321,
         equipmentType: EquipmentType.LAPTOP,
         imei: '987654321098765',
@@ -137,7 +139,7 @@ export class SeedService {
         Admin: client2,
       }),
       this.orderRepository.create({
-        clientEmail: /*client2.email*/ 'cliente2@example.com',
+        clientEmail: 'cliente2@example.com',
         clientDni: 12345678,
         equipmentType: EquipmentType.TABLET,
         imei: '456789012345678',
@@ -147,7 +149,7 @@ export class SeedService {
         Admin: client1,
       }),
       this.orderRepository.create({
-        clientEmail: /*client2.email*/ 'cliente2@example.com',
+        clientEmail:'cliente2@example.com',
         clientDni: 87654321,
         equipmentType: EquipmentType.CELULAR,
         imei: '321098765432109',
@@ -157,7 +159,7 @@ export class SeedService {
         Admin: client2,
       }),
       this.orderRepository.create({
-        clientEmail: /*client2.email*/ 'cliente2@example.com',
+        clientEmail:  'cliente2@example.com',
         clientDni: 87654321,
         equipmentType: EquipmentType.CELULAR,
         imei: '321098765432109',
@@ -187,6 +189,7 @@ export class SeedService {
       await this.evidenceRepository.save(evidences);
      
     }
+    /*
 
     //Agregar historial de eventos a cada orden
     /*for (const order of savedOrders) {
