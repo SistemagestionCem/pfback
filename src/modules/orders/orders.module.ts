@@ -9,6 +9,7 @@ import { Order } from './Order.entity';
 import { EvidencesModule } from '../evidences/evidences.module';
 import { UsersModule } from '../users/users.module';
 import { PaymentsModule } from '../payments/payments.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module ({
 
@@ -18,6 +19,7 @@ import { PaymentsModule } from '../payments/payments.module';
     forwardRef (() => EvidencesModule),
     forwardRef (() => UsersModule),
     forwardRef (() => PaymentsModule),
+    forwardRef (() => NotificationsModule),
 
   ],
 
