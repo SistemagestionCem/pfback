@@ -8,6 +8,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from 'src/dto/users/updateUser.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -101,4 +102,19 @@ export class UsersRepository {
       throw new NotFoundException('El usuario no existe');
     }
   }
+
+  async updateUser(id: string, user: UpdateUserDto): Promise<Object> {
+    try {
+      await this.usersRepository.update(id, user);
+      return {
+        success: true,
+        message: 'Usuario actualizado con éxito',
+      };
+    } catch (error) {
+      // Manejo de error
+      console.error('Error al actualizar usuario:', error);
+      throw new NotFoundException('El usuario no existe');
+    }
+  }
+  
 }

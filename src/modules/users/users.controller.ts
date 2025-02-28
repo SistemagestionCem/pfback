@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Role } from 'src/enum/Role.enum';
 import { User } from './User.entity';
+import { UpdateUserDto } from 'src/dto/users/updateUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -28,5 +29,10 @@ export class UsersController {
     @Param('id') id: string,
   ) {
     return await this.usersService.changePassword(id, password);
+  }
+
+  @Patch('/updateUser/:id')
+  async updateUser(@Body() user: UpdateUserDto, @Param('id') id: string) {
+    return await this.usersService.updateUser(id, user);
   }
 }

@@ -4,6 +4,7 @@ import { User } from './User.entity';
 
 import { UsersRepository } from './users.repository';
 import { Role } from 'src/enum/Role.enum';
+import { UpdateUserDto } from 'src/dto/users/updateUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -23,5 +24,9 @@ export class UsersService {
 
   async changePassword(id: string, password: Partial<User>) {
     return await this.usersRepository.changePassword(id, password);
+  }
+
+  async updateUser(id: string, user: UpdateUserDto) {
+    return await this.usersRepository.updateUser(id, user);
   }
 }
