@@ -44,9 +44,9 @@ export class OrdersService {
 
   }
 
-  async getOrdersByTechnName (technName: string): Promise<Order []> {
+  async getOrdersByTechnId (id: string): Promise<Order []> {
 
-    return this.ordersRepository.getOrdersByTechnName (technName);
+    return this.ordersRepository.getOrdersByTechnId (id);
 
   }
 

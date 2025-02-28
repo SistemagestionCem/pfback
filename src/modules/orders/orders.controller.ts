@@ -59,21 +59,12 @@ export class OrdersController {
 
   }
 
-  @Get ('technician/:technName') // Endpoint verificado!
-
-  // @Roles (Role.TECHN)
-  // @UseGuards(AuthGuard, RoleGuard)
-
-
-  async getOrdersByTechnName (
-
-    @Param('technId') technId: string,
-
-  ): Promise<Order []> {
-
-    return this.ordersService.getOrdersByTechnName (technId);
-
-  }
+  @Get('technician/:technId') // Endpoint verificado!
+async getOrdersByTechnId(
+  @Param('technId') technId: string, // El parámetro debería ser 'technId'
+): Promise<Order[]> {
+  return this.ordersService.getOrdersByTechnId(technId); // Se pasa el 'technId' correctamente
+}
 
   /*@Get('status/:status')
   async getByStatus(@Param ('status') status: OrderStatus): Promise<Order[]> {

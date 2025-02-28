@@ -49,25 +49,17 @@ export class OrdersRepository  {
 
   /*********/
 
-  async getOrdersByTechnName (technName: string): Promise<Order []> {
-
-    return this.ordersRepository.find ({
-
+  async getOrdersByTechnId(id: string): Promise<Order[]> {
+    return this.ordersRepository.find({
       where: {
-
         assignedTechn: {
-
-          name: technName, 
-
+          id: id, // Aquí debes usar el id del técnico
         },
-
       },
-
-      relations: ['assignedTechn', 'Admin'], 
-
+      relations: ['assignedTechn', 'Admin'],
     });
-
-  }  
+  }
+  
 
   /*********/
 
