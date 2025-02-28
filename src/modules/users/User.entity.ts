@@ -65,7 +65,4 @@ export class User {
   @OneToMany (() => Order, (order) => order.Admin)
   adminOrders: Order [];
 
-  /**********/
-
-
 }
