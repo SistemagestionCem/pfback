@@ -96,7 +96,7 @@ async getOrdersByTechnId(
   @Patch ('update/:id')
 
   async updateOrder (@Param ('id') id: string, @Body () updateOrderDto: UpdateOrderDto): Promise<Order> {
-    return await this.ordersService.updateOrder (id, updateOrderDto);
+    return await this.ordersService.updateOrderWithNotification (id, updateOrderDto);
 
   }
 
