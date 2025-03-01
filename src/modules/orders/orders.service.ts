@@ -18,6 +18,7 @@ import { UpdateOrderDto } from 'src/dto/orders/updateOrder.dto';
 import { OrderStatus } from 'src/enum/orderstatus.enum';
 import { User } from '../users/User.entity';*/
 import { Role } from 'src/enum/Role.enum';
+import { NotificationsRepository } from '../notifications/notifications.repository';
 /*import { OrderHistoriesService } from '../orderHistories/orderHistories.service';*/
 /*import { PaymentsService } from '../payments/payments.service';*/
 
@@ -28,6 +29,8 @@ export class OrdersService {
   constructor (
     private readonly ordersRepository: OrdersRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly notificationRepository: NotificationsRepository
+
     /*private readonly orderHistoriesService: OrderHistoriesService,*/
 
   ) {}
@@ -111,8 +114,8 @@ export class OrdersService {
 
   async createOrder (createOrderDto: CreateOrderDto): Promise<Order> {
 
-    const { clientEmail, clientDni, technName, equipmentType, imei, description, status, adminName  } = createOrderDto;   
-  
+    const { clientEmail, clientDni, technName, equipmentType, imei, description, status, adminName  } = createOrderDto;
+
     const assignedTechnician = await this.usersRepository.findByRole (technName, Role.TECHN);
 
     if (!assignedTechnician)
@@ -125,24 +128,24 @@ export class OrdersService {
 
       throw new NotFoundException ('El usuario que crea la orden debe ser un administrador.');
 
-    const currentDate = new Date (); 
+    const currentDate = new Date ();
 
     const orderData: Partial<Order> = {
 
-      clientEmail: clientEmail || '', 
-      clientDni: clientDni || null, 
-      assignedTechn: assignedTechnician,     
-      equipmentType: equipmentType || null, 
-      imei: imei || '', 
-      description: description || '', 
-      status: status || null,       
-      statusHistory: [], 
-      statusWithDate: status ? { status: status, date: currentDate } : null, 
-      isActive: true, 
-      Admin: admin, 
+      clientEmail: clientEmail || '',
+      clientDni: clientDni || null,
+      assignedTechn: assignedTechnician,
+      equipmentType: equipmentType || null,
+      imei: imei || '',
+      description: description || '',
+      status: status || null,
+      statusHistory: [],
+      statusWithDate: status ? { status: status, date: currentDate } : null,
+      isActive: true,
+      Admin: admin,
 
     };
-  
+
     const newOrder = await this.ordersRepository.createOrder (orderData);
     return await this.ordersRepository.saveOrder1 (newOrder);
 
@@ -161,13 +164,13 @@ export class OrdersService {
       throw new NotFoundException (`Orden con ID ${id} no encontrada.`);
 
     }
-  
+
     const { isActive: _isActive, createdAt: __createdAt,...allowedUpdates } = updateOrderDto;
-  
+
     if (allowedUpdates.status) {
 
       const now = new Date ();
-  
+
       order.statusWithDate = {
 
         status: allowedUpdates.status,
@@ -178,18 +181,29 @@ export class OrdersService {
       order.statusHistory.push ({
 
         status: allowedUpdates.status,
+
         date: now,
 
       });
-
     }
-  
     Object.assign (order, allowedUpdates);
-  
+    console.log(`📌 Estado después de guardar en DB: ${order.status}`);
     return await this.ordersRepository.saveOrder1 (order);
-    
+
   }
-  
+
+  async updateOrderWithNotification(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+    const updatedOrder = await this.updateOrder(id, updateOrderDto);
+    if (updateOrderDto.status) {
+        await this.notificationRepository.notifyStatusChange(updatedOrder);
+        console.log("📧 Notificación de estado enviada con éxito.");
+    }
+
+    return updatedOrder;
+}
+
+
+
   /***********/
 
   /*async updateTechnicalData(
@@ -243,9 +257,9 @@ export class OrdersService {
     );
   }*/
 
-  async inactiveDelete ( 
+  async inactiveDelete (
 
-    id: string, 
+    id: string,
     { isActive }: UpdateOrderDto,
 
   ): Promise<{ message: string }> {

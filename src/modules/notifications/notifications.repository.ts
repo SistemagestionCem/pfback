@@ -41,39 +41,90 @@ export class NotificationsRepository {
 
   //* Notificación de cambio de estado (cuando la orden cambia)
   async notifyStatusChange(order: Order) {
+
+    console.log("🚀 Iniciando notificación de estado...");
+
+    if (!order.clientEmail) {
+        console.error("❌ No se enviará el email: el cliente no tiene un correo registrado.");
+        return;
+    }
+
     const statusMessageMap = {
-    [OrderStatus.REVISION]: 
-      'Su equipo está en revisión. Pronto un presupuesto del servicio estara anclado a su orden para su aprobación.',
-    [OrderStatus.CONFIRMADO]: 
-      'Su orden ha sido confirmada. Se procederá con el inicio del servicio. Gracias por la confianza',
-    [OrderStatus.CANCELADO]: 
-      'Su orden ha sido cancelada. Si necesita asistencia, por favor contáctenos.',
-    [OrderStatus.REPARACION]: 
-      'Su equipo está siendo reparado. Le notificaremos cuando el proceso haya finalizado.',
-    [OrderStatus.FINALIZADO]: 
-      'La reparación de su equipo ha sido completada. Puede proceder con el pago para su entrega.',
-    [OrderStatus.PAGO]: 
-      'Hemos recibido su pago. Su equipo está listo para ser retirado en nuestra tienda.',
-    [OrderStatus.RETIRADO]: 
-      'Su equipo ha sido retirado. Gracias por confiar en nuestro servicio.',
-  
+        [OrderStatus.PENDIENTE]: 'Su equipo está pendiente de aprobacion',
+        [OrderStatus.REVISION]: 'Su equipo está en revisión. Pronto un presupuesto del servicio estará anclado a su orden para su aprobación.',
+        [OrderStatus.CONFIRMADO]: 'Su orden ha sido confirmada. Se procederá con el inicio del servicio. Gracias por la confianza.',
+        [OrderStatus.CANCELADO]: 'Su orden ha sido cancelada. Si necesita asistencia, por favor contáctenos.',
+        [OrderStatus.REPARACION]: 'Su equipo está siendo reparado. Le notificaremos cuando el proceso haya finalizado.',
+        [OrderStatus.FINALIZADO]: 'La reparación de su equipo ha sido completada. Puede proceder con el pago para su entrega.',
+        [OrderStatus.PAGO]: 'Hemos recibido su pago. Su equipo está listo para ser retirado en nuestra tienda.',
+        [OrderStatus.RETIRADO]: 'Su equipo ha sido retirado. Gracias por confiar en nuestro servicio.',
     };
 
     const latestStatus = order.status;
-    if (statusMessageMap[latestStatus]) {
-      await this.mailService.sendNotificationEmail(
-        order.clientEmail,
-        `📢 Estado actualizado: ${statusMessageMap[latestStatus]}`,
-      );
+    const message = statusMessageMap[latestStatus];
 
-      // Registrar la notificación en la base de datos
-      const notification = this.notificationRepository.create({
-        order,
-        type: NotificationType.STATUS_UPDATE,
-        message: statusMessageMap[latestStatus],
-      });
-      await this.notificationRepository.save(notification);
+    if (!message) {
+        console.warn(`⚠️ No hay mensaje definido para el estado: ${latestStatus}`);
+        return;
     }
+
+    console.log(`📧 Enviando email a ${order.clientEmail} con mensaje: "${message}"`);
+
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const emailResponse = await this.mailService.sendNotificationEmail(
+            order.clientEmail,
+            `📢 Estado actualizado: ${message}`,
+        );
+
+        console.log("✅ Email enviado con éxito:");
+
+        // Registrar la notificación en la base de datos
+        const notification = this.notificationRepository.create({
+            order,
+            type: NotificationType.STATUS_UPDATE,
+            message,
+        });
+
+        await this.notificationRepository.save(notification);
+        console.log("✅ Notificación guardada en la base de datos.");
+    } catch (error) {
+        console.error("❌ Error al enviar el email:", error);
+    }
+
+    // const statusMessageMap = {
+    // [OrderStatus.REVISION]: 
+    //   'Su equipo está en revisión. Pronto un presupuesto del servicio estara anclado a su orden para su aprobación.',
+    // [OrderStatus.CONFIRMADO]: 
+    //   'Su orden ha sido confirmada. Se procederá con el inicio del servicio. Gracias por la confianza',
+    // [OrderStatus.CANCELADO]: 
+    //   'Su orden ha sido cancelada. Si necesita asistencia, por favor contáctenos.',
+    // [OrderStatus.REPARACION]: 
+    //   'Su equipo está siendo reparado. Le notificaremos cuando el proceso haya finalizado.',
+    // [OrderStatus.FINALIZADO]: 
+    //   'La reparación de su equipo ha sido completada. Puede proceder con el pago para su entrega.',
+    // [OrderStatus.PAGO]: 
+    //   'Hemos recibido su pago. Su equipo está listo para ser retirado en nuestra tienda.',
+    // [OrderStatus.RETIRADO]: 
+    //   'Su equipo ha sido retirado. Gracias por confiar en nuestro servicio.',
+  
+    // };
+
+    // const latestStatus = order.status;
+    // if (statusMessageMap[latestStatus]) {
+    //   await this.mailService.sendNotificationEmail(
+    //     order.clientEmail,
+    //     `📢 Estado actualizado: ${statusMessageMap[latestStatus]}`,
+    //   );
+
+    //   // Registrar la notificación en la base de datos
+    //   const notification = this.notificationRepository.create({
+    //     order,
+    //     type: NotificationType.STATUS_UPDATE,
+    //     message: statusMessageMap[latestStatus],
+    //   });
+    //   await this.notificationRepository.save(notification);
+    // }
   }
 
   //* logica CRUD de notificaciones
