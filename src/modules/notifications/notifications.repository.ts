@@ -50,7 +50,7 @@ export class NotificationsRepository {
     }
 
     const statusMessageMap = {
-        [OrderStatus.PENDIENTE]: 'Su equipo está pendiente de aprobacion',
+        [OrderStatus.PENDIENTE]: 'Bienvenido a MobileCer. Gracias por confiar en nosotros, estamos trabajando en su equipo y a la brevedad tendra noticias',
         [OrderStatus.REVISION]: 'Su equipo está en revisión. Pronto un presupuesto del servicio estará anclado a su orden para su aprobación.',
         [OrderStatus.CONFIRMADO]: 'Su orden ha sido confirmada. Se procederá con el inicio del servicio. Gracias por la confianza.',
         [OrderStatus.CANCELADO]: 'Su orden ha sido cancelada. Si necesita asistencia, por favor contáctenos.',

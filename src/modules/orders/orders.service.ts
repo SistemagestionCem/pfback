@@ -147,7 +147,14 @@ export class OrdersService {
     };
 
     const newOrder = await this.ordersRepository.createOrder (orderData);
-    return await this.ordersRepository.saveOrder1 (newOrder);
+
+    if(!newOrder){
+      throw new BadRequestException('error al crear la orden')
+    }
+    await this.ordersRepository.saveOrder1 (newOrder)
+    await this.notificationRepository.notifyStatusChange(newOrder);
+     console.log(`📧 Notificación de estado ${newOrder.status} enviada con éxito.`);
+    return newOrder;
 
   }
 
