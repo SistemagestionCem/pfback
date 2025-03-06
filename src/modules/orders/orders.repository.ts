@@ -2,14 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './Order.entity';
-import { NotificationsRepository } from '../notifications/notifications.repository';
 
 @Injectable()
 export class OrdersRepository {
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
-    private readonly notificationRepository: NotificationsRepository,
   ) {}
 
   async getAllOrders(): Promise<Order[]> {
@@ -40,10 +38,10 @@ export class OrdersRepository {
     });
   }
 
-  async getOrdersByTechnName(technName: string): Promise<Order[]> {
+  async getOrdersByTechnId(technId: string): Promise<Order[]> {
     return this.ordersRepository.find({
       where: {
-        assignedTechn: { name: technName },
+        assignedTechn: { id: technId },
       },
 
       order: { createdAt: 'DESC' },
@@ -143,3 +141,5 @@ export class OrdersRepository {
     });
   }
 }
+
+/**********/

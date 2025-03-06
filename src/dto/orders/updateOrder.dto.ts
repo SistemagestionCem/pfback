@@ -1,6 +1,6 @@
 
 
-import { IsEnum, IsOptional, IsString, IsNumber, IsEmail, IsBoolean, IsDateString } from 'class-validator';
+/*import { IsEnum, IsOptional, IsString, IsNumber, IsEmail, IsBoolean, IsDateString } from 'class-validator';
 import { EquipmentType } from '../../enum/equipmentype.enum';
 import { OrderStatus } from '../../enum/orderstatus.enum';
 
@@ -46,6 +46,56 @@ export class UpdateOrderDto {
   @IsString ()
   adminName?: string;
 
+}*/
+
+/**********/
+
+import { IsEnum, IsOptional, IsString, IsNumber, IsEmail, IsBoolean, IsDateString } from 'class-validator';
+import { EquipmentType } from '../../enum/equipmentype.enum';
+import { OrderStatus } from '../../enum/orderstatus.enum';
+
+export class UpdateOrderDto {
+
+  @IsOptional ()
+  @IsEmail ()
+  clientEmail?: string;
+
+  @IsOptional ()
+  @IsNumber ()
+  clientDni?: number;
+  
+  @IsOptional ()
+  @IsString ()
+  technId?: string;
+
+  @IsOptional ()
+  @IsEnum (EquipmentType)
+  equipmentType?: EquipmentType;
+
+  @IsOptional ()
+  @IsString ()
+  imei?: string;
+
+  @IsOptional ()
+  @IsString ()
+  description?: string;
+
+  @IsOptional ()
+  @IsEnum (OrderStatus)
+  status?: OrderStatus;
+
+  @IsOptional ()
+  @IsBoolean ()
+  isActive?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  readonly createdAt?: Date;
+
+  @IsOptional ()
+  @IsString ()
+  adminId?: string;
+
 }
 
-
+/**********/

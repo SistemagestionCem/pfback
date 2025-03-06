@@ -23,31 +23,18 @@ export class UsersRepository {
     return await this.usersRepository.findOne({ where: { id } });
   }
 
-  /*async findByRole(id: string, role: Role): Promise<User> {
-    const userFound = await this.usersRepository.findOne({
-      where: { id, role },
-    });
 
-    if (!userFound) {
-      throw new NotFoundException('User Not Exist');
-    }
-
-    return userFound;
-  }*/
-
-  /**********/
-
-  async findByRole (name: string, role: Role): Promise<User> {
+  async findByRole (id: string, role: Role): Promise<User> {
 
     const userFound = await this.usersRepository.findOne ({
 
-      where: { name, role }, 
+      where: { id, role }, 
 
     });
   
     if (!userFound) {
 
-      throw new NotFoundException (`El usuario con el nombre "${name}" y el rol "${role}" no fue encontrado.`);
+      throw new NotFoundException (`El usuario con el nombre "${id}" y el rol "${role}" no fue encontrado.`);
 
     }
   
