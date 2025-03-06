@@ -17,10 +17,10 @@ const database = {
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
   autoLoadEntities: true,
-  logging: true,
+ // logging: true,
   // dropSchema: true,
 };
 
-export default registerAs('typeorm', () => database);
+ export default registerAs('typeorm', () => database);
 
-export const connection = new DataSource(database as DataSourceOptions);
+ export const connection = new DataSource(database as DataSourceOptions);
