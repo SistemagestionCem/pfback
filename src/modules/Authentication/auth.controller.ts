@@ -42,6 +42,6 @@ export class AuthController {
     //   message: 'Login exitoso con Google',
     //   user: req.user, // <-- Asegúrate de manejar la información del usuario aquí
     // };
-    res.redirect(`http://localhost:3000/login?user=${JSON.stringify(user)}`);
+    res.redirect(`https://pffront-fawn.vercel.app/login?user=${JSON.stringify(user)}`);
   }
 }
