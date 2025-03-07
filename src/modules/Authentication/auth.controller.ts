@@ -5,6 +5,7 @@ import {
   HttpCode,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -35,10 +36,12 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req) {
-    return {
-      message: 'Login exitoso con Google',
-      user: req.user, // <-- Asegúrate de manejar la información del usuario aquí
-    };
+  googleAuthRedirect(@Req() req, @Res() res) {
+    const  user  = req.user;
+    // return {
+    //   message: 'Login exitoso con Google',
+    //   user: req.user, // <-- Asegúrate de manejar la información del usuario aquí
+    // };
+    res.redirect(`https://pffront-fawn.vercel.app/dashboard?user=${JSON.stringify(user)}`);
   }
 }
